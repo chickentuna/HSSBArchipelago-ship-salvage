@@ -100,6 +100,15 @@ public class Plugin : BaseUnityPlugin
             Log.LogError($"[HS-AP] GameHooks.Apply failed: {ex}");
         }
 
+        try
+        {
+            ApMode.ShipStripConfig.Init(Config);
+        }
+        catch (Exception ex)
+        {
+            Log.LogError($"[HS-AP] ShipStripConfig.Init failed: {ex}");
+        }
+
         if (AutoConnect.Value)
         {
             _client.Connect(Server.Value, Port.Value, Slot.Value, Password.Value);
@@ -113,6 +122,15 @@ public class Plugin : BaseUnityPlugin
     private void Update()
     {
         _client?.Tick();
+
+        try
+        {
+            ApMode.ShipStripConfig.Update();
+        }
+        catch (Exception ex)
+        {
+            Log.LogError($"[HS-AP] ShipStripConfig.Update failed: {ex}");
+        }
 
         if (Input.GetKeyDown(KeyCode.F6))
         {

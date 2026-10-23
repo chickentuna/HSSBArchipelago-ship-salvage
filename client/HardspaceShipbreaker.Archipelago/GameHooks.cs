@@ -2045,6 +2045,7 @@ public static class GameHookSink
 {
     public static void Prefix(MethodBase __originalMethod, object? __instance, object[]? __args)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         if (__originalMethod.Name == "UpdateCertXPTotals")
         {
             // Real post-mission tally only — not Hab tear-down / skip-tutorial.
@@ -2061,6 +2062,7 @@ public static class GameHookSink
 
     public static void VoidPostfix(MethodBase __originalMethod, object? __instance, object[]? __args)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         switch (__originalMethod.Name)
         {
             case "HandlePositiveSalvage":
@@ -2083,6 +2085,7 @@ public static class GameHookSink
 
     public static void DisplayTrainingShipPrefix(object __instance, ref int __state)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         __state = 0;
         try
         {
@@ -2099,6 +2102,7 @@ public static class GameHookSink
 
     public static void DisplayTrainingShipPostfix(object __instance, int __state)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         // Prefer never hiding a catalogue that DisplayCatalogueShips already filled.
         // Also force after F9 collect / Finish Basic Training even if regen is still empty.
         if (__state <= 0 && !ItemApplicator.ShouldForceJobBoardCatalogue())
@@ -2111,17 +2115,20 @@ public static class GameHookSink
 
     public static void ShipClaimPostfix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         GameHooks.OnShipClaimedForSpawn();
     }
 
     public static void ShipSpawnedPostfix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         GameHooks.LogClaimedVsBayShipPublic();
     }
 
     /// <summary>Block setting certification past the Progressive Cert Rank ceiling.</summary>
     public static bool TrySetCertificationPrefix(int index, bool isDebug, ref bool __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         // index is 0-based asset index; ceiling compares display ranks.
         if (ItemApplicator.AllowCertificationTarget(index + 1))
         {
@@ -2135,6 +2142,7 @@ public static class GameHookSink
     /// <summary>Block vanilla rank-ups that would pass a locked milestone.</summary>
     public static bool TryIncreaseCertificationPrefix(bool isDebug, ref bool __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         var current = ItemApplicator.ReadCurrentCertificationRank();
         if (ItemApplicator.AllowCertificationTarget(current + 1))
         {
@@ -2147,12 +2155,14 @@ public static class GameHookSink
 
     public static void RewardTierPostfix(object __instance, object ev)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         GameHooks.OnSalvageTierReached(__instance, ev);
     }
 
     /// <summary>Block applying Hab-yellow upgrades until the AP item grants them.</summary>
     public static bool ApplyUpgradePrefix(object __instance)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         if (ItemApplicator.ShouldBlockUpgradeApply(__instance))
         {
             return false;
@@ -2163,11 +2173,13 @@ public static class GameHookSink
 
     public static void ApplyUpgradesPostfix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         ItemApplicator.ReapplyApGrantedUpgrades();
     }
 
     public static void UpgradeScreenEnablePrefix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         ItemApplicator.EnsureHabShopPaidState();
         ItemApplicator.MarkHabShopPurchasedForGrantedEquipment();
         ItemApplicator.StripUnpaidShopRowsFromHabOwned();
@@ -2179,6 +2191,7 @@ public static class GameHookSink
     /// </summary>
     public static void DrawUnpurchasedUpgradePostfix(object __instance)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         ItemApplicator.EnsureHabRankLockVisual(__instance);
     }
 
@@ -2188,6 +2201,7 @@ public static class GameHookSink
     /// </summary>
     public static bool CanPurchaseUpgradePrefix(object upgrade, ref int result, ref bool __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         if (ItemApplicator.TryEvaluateHabShopCanPurchase(upgrade, out var canPurchase, out var purchaseResult))
         {
             __result = canPurchase;
@@ -2210,6 +2224,7 @@ public static class GameHookSink
     /// </summary>
     public static bool PurchaseUpgradePrefix(object upgrade)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         if (!ItemApplicator.TryHandleHabShopSanityPurchase(upgrade, out var id, out var name))
         {
             return true;
@@ -2223,6 +2238,7 @@ public static class GameHookSink
         ref object? currentHighestAvailableShipClass,
         ref object? highestAvailableShipClassDuringLastRefresh)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         ItemApplicator.AdjustAccessibleShipClasses(
             ref currentHighestAvailableShipClass,
             ref highestAvailableShipClassDuringLastRefresh);
@@ -2231,6 +2247,7 @@ public static class GameHookSink
     /// <summary>Block tether deploy without AP Tether Module (tutorial exempt).</summary>
     public static bool TetherCreatePrefix(ref bool __state)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         __state = GameHooks.IsTutorialContext() || ItemApplicator.HasTetherModule;
         if (__state)
         {
@@ -2243,6 +2260,7 @@ public static class GameHookSink
 
     public static void TetherCreatePostfix(bool __state)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         if (__state)
         {
             GameHooks.OnFirstTetherPlaced();
@@ -2251,12 +2269,14 @@ public static class GameHookSink
 
     public static void DataDriveIdentifyPostfix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         GameHooks.OnDataDriveRecovered();
     }
 
     /// <summary>Block demo place/throw without AP Demo Charge License.</summary>
     public static bool DemoPlacePrefix()
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return true;
         if (GameHooks.IsTutorialContext() || ItemApplicator.HasDemoLicense)
         {
             return true;
@@ -2273,6 +2293,7 @@ public static class GameHookSink
     /// </summary>
     public static void DemoPrefabIndexPostfix(object __instance, ref int __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         try
         {
             if (__instance.GetType().GetProperty("PrimaryDemoChargePrefabs")?.GetValue(__instance)
@@ -2305,6 +2326,7 @@ public static class GameHookSink
     /// </summary>
     public static void ThrusterDurabilityCtorPrefix(object asset)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         ItemApplicator.AlignStoredDurabilityForAsset(asset);
     }
 
@@ -2315,6 +2337,7 @@ public static class GameHookSink
     /// </summary>
     public static void ThrusterGetDurabilityRangePostfix(object __instance, float durabilityValue, ref object __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         if (__result != null)
         {
             return;
@@ -2335,6 +2358,7 @@ public static class GameHookSink
 
     public static void Postfix(MethodBase __originalMethod, object? __instance, object[]? __args, object? __result)
     {
+        if (ApMode.ApProfiles.CurrentIsAp) return;
         switch (__originalMethod.Name)
         {
             case "IsCorrectSalvageOption":

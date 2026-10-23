@@ -25,6 +25,7 @@ public sealed class ArchipelagoClient
     public const int GoalDebtPayoff = 0;
     public const int GoalAtlasScout = 1;
     public const int GoalRank20 = 2;
+    public const int GoalPartRando = 3;
 
     private const string DataStorageOfflineKey = "HardspaceShipbreaker.OfflineChecks";
 
@@ -124,6 +125,7 @@ public sealed class ArchipelagoClient
     public string? LastConnectError { get; private set; }
     public string? SlotName { get; private set; }
     public int GoalMode => _goalMode;
+    public bool GoalSent => _goalSent;
     public bool HabShopSanityEnabled => _habShopSanity;
     public int LocalCheckedCount => _checkedLocations.Count;
 
@@ -711,6 +713,27 @@ public sealed class ArchipelagoClient
 
     public bool IsLocationChecked(long locationId) => _checkedLocations.Contains(locationId);
 
+    public string? LocationName(long locationId) => _session?.Locations.GetLocationNameFromId(locationId);
+
+    public int ReceivedItemCount(long itemId) =>
+        _session?.Items.AllItemsReceived.Count(item => item.ItemId == itemId) ?? 0;
+
+    public HashSet<long> ReceivedItemIds()
+    {
+        var ids = new HashSet<long>();
+        if (_session == null)
+        {
+            return ids;
+        }
+
+        foreach (var item in _session.Items.AllItemsReceived)
+        {
+            ids.Add(item.ItemId);
+        }
+
+        return ids;
+    }
+
     private string ResolveRoomSeed()
     {
         try
@@ -813,6 +836,13 @@ public sealed class ArchipelagoClient
                     creditLarge = 8_000_000f;
                     break;
             }
+        }
+
+        ApMode.PartRandoSlot.Load(slotData);
+        if (ApMode.PartRandoSlot.Active)
+        {
+            _goalMode = GoalPartRando;
+            _habShopSanity = false;
         }
 
         Plugin.Log.LogInfo($"[HS-AP] GoalMode={_goalMode} DeathLink={_deathLink} HabShopSanity={_habShopSanity}");
