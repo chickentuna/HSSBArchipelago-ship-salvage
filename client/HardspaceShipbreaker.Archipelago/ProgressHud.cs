@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace HardspaceShipbreaker.Archipelago;
@@ -24,6 +25,7 @@ internal static class ProgressHud
         {
             ArchipelagoClient.GoalAtlasScout => "Atlas Scout Tier 5",
             ArchipelagoClient.GoalRank20 => "Rank 20",
+            ArchipelagoClient.GoalPartRando => PartRandoGoal(client),
             _ => "Debt payoff"
         };
 
@@ -36,5 +38,12 @@ internal static class ProgressHud
         GUI.Label(
             new Rect(_rect.x + 10, _rect.y + 94, _rect.width - 20, 22),
             "Universal Tracker: use AP game 'Hardspace Shipbreaker'");
+    }
+
+    private static string PartRandoGoal(ArchipelagoClient client)
+    {
+        var ships = ApMode.PartRandoSlot.Ships;
+        int done = ships.Count(s => s.Locations.Count > 0 && client.IsLocationChecked(s.Locations[s.Locations.Count - 1]));
+        return $"last marker on every ship ({done}/{ships.Count})";
     }
 }

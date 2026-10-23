@@ -27,6 +27,10 @@ internal static class SlotJobBoard
     private static MethodInfo _disableExcessIndustrialCards;
     private static AccessTools.FieldRef<JobBoardScreenController, List<ShipCardController>> _availableCards;
     private static AccessTools.FieldRef<JobBoardScreenController, Transform> _cardParent;
+    private static AccessTools.FieldRef<JobBoardScreenController, ShipCardController> _selectedCard;
+    private static AccessTools.FieldRef<JobBoardScreenController, LocalizedTextMeshProUGUI> _coreSystemPrefab;
+    private static AccessTools.FieldRef<JobBoardScreenController, Transform> _coreSystemParent;
+    private static readonly List<LocalizedTextMeshProUGUI> _partsanityLines = new();
 
     private static bool Active => PartRandoSlot.Active && ApProfiles.CurrentIsAp;
 
@@ -40,12 +44,18 @@ internal static class SlotJobBoard
             _disableExcessIndustrialCards = AccessTools.Method(t, "DisableExcessIndustrialActionCards");
             _availableCards = AccessTools.FieldRefAccess<JobBoardScreenController, List<ShipCardController>>("m_AvailableShipsCardControllers");
             _cardParent = AccessTools.FieldRefAccess<JobBoardScreenController, Transform>("m_ShipCardParent");
+            _selectedCard = AccessTools.FieldRefAccess<JobBoardScreenController, ShipCardController>("mCurrentlySelectedShip");
+            _coreSystemPrefab = AccessTools.FieldRefAccess<JobBoardScreenController, LocalizedTextMeshProUGUI>("m_CoreSystemTextPrefab");
+            _coreSystemParent = AccessTools.FieldRefAccess<JobBoardScreenController, Transform>("m_CoreSystemParent");
             Patch(h, t, nameof(JobBoardScreenController.ShowJobBoard), nameof(ShowJobBoardPrefix));
             Patch(h, t, "DisplayNewlyUnlockedShips", nameof(SkipWhenActive));
             Patch(h, t, "DisplayIndustrialActionShips", nameof(DisplayIndustrialActionShipsPrefix));
             Patch(h, t, "DisplayCatalogueShips", nameof(DisplayCatalogueShipsPrefix));
             Patch(h, t, nameof(JobBoardScreenController.SetupCurrentlySelectedShipForSpawn), nameof(SetupForSpawnPrefix));
             Patch(h, typeof(JobBoardUtils), nameof(JobBoardUtils.RefreshJobBoardShipsAsync), nameof(RefreshPrefix));
+            var coreSystems = AccessTools.Method(t, "DisplayShipInfoCoreSystems");
+            h.Patch(coreSystems, postfix: new HarmonyMethod(typeof(SlotJobBoard), nameof(CoreSystemsPostfix)));
+            Plugin.Log.LogInfo($"{P} Patched {t.Name}.DisplayShipInfoCoreSystems (Part Rando partsanity lines)");
             Patch(h, typeof(JobBoardUtils), nameof(JobBoardUtils.RefreshJobBoardShipsFromLoadedDataAsync), nameof(RefreshFromLoadedDataPrefix));
             Message.AddListener<GameEventMessage>(OnGameEvent);
         }
@@ -257,6 +267,7 @@ internal static class SlotJobBoard
                 var preview = _previews.Length >= ship.Index ? _previews[ship.Index - 1] : null;
                 if (preview == null || IsInBay(ship) || !PartRandoSlot.IsUnlocked(ship)) continue;
                 var cls = FindClass(ship.ShipClass);
+                SlotMarkers.ApplyMarkers(preview);
                 _addCard.Invoke(__instance, new object[] { preview, cls, ShipCardController.ShipCardType.AvailableShip, false });
                 shown++;
             }
@@ -271,6 +282,49 @@ internal static class SlotJobBoard
         {
             Plugin.Log.LogError($"{P} Showing slot ships failed: {e}");
             return true;
+        }
+    }
+
+    private static List<string> OpenPartsanityChecks(SlotShip ship)
+    {
+        var client = Plugin.Instance.Client;
+        var locked = PartRandoSlot.LockedPartTypes();
+        return ship.Parts.Keys
+            .Where(key => !locked.Contains(key) && PartRandoSlot.PartsanityLocations.ContainsKey(key))
+            .Select(key => PartRandoSlot.PartsanityLocations[key])
+            .Where(location => client?.IsLocationChecked(location) != true)
+            .Select(location => client?.LocationName(location) ?? location.ToString())
+            .OrderBy(name => name)
+            .ToList();
+    }
+
+    private static void CoreSystemsPostfix(JobBoardScreenController __instance)
+    {
+        try
+        {
+            var ship = Active ? SlotMarkers.FindShip(_selectedCard(__instance)?.ShipPreview) : null;
+            var lines = ship != null ? OpenPartsanityChecks(ship) : new List<string>();
+            _partsanityLines.RemoveAll(label => label == null);
+            while (_partsanityLines.Count < lines.Count)
+            {
+                var label = UnityEngine.Object.Instantiate(_coreSystemPrefab(__instance), _coreSystemParent(__instance));
+                label.enabled = false;
+                _partsanityLines.Add(label);
+            }
+            for (int i = 0; i < _partsanityLines.Count; i++)
+            {
+                var label = _partsanityLines[i];
+                if (i < lines.Count)
+                {
+                    label.TMProText.SetText(lines[i]);
+                    label.transform.SetAsLastSibling();
+                }
+                label.gameObject.SetActive(i < lines.Count);
+            }
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"{P} Listing the partsanity checks failed: {e}");
         }
     }
 
