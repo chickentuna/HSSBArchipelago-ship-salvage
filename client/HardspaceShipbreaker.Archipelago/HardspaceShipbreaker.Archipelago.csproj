@@ -8,6 +8,8 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Version>0.6.29</Version>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GameDir Condition="'$(GameDir)' == ''">$(HOME)/.steam/debian-installation/steamapps/common/Hardspace Shipbreaker</GameDir>
+    <GameManaged>$(GameDir)/Shipbreaker_Data/Managed</GameManaged>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +17,21 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="UnityEngine.Modules" Version="2020.3.33" IncludeAssets="compile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="BBI.Unity.Game"><HintPath>$(GameManaged)/BBI.Unity.Game.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BBI.Unity.Core"><HintPath>$(GameManaged)/BBI.Unity.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Entities"><HintPath>$(GameManaged)/Unity.Entities.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Entities.Hybrid"><HintPath>$(GameManaged)/Unity.Entities.Hybrid.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Collections"><HintPath>$(GameManaged)/Unity.Collections.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Mathematics"><HintPath>$(GameManaged)/Unity.Mathematics.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Burst"><HintPath>$(GameManaged)/Unity.Burst.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Addressables"><HintPath>$(GameManaged)/Unity.Addressables.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.ResourceManager"><HintPath>$(GameManaged)/Unity.ResourceManager.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Carbon.Core"><HintPath>$(GameManaged)/Carbon.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Carbon.Core.Unity"><HintPath>$(GameManaged)/Carbon.Core.Unity.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Doozy.Engine"><HintPath>$(GameManaged)/Doozy.Engine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(GameManaged)/Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(GameManaged)/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 </Project>
