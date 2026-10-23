@@ -72,6 +72,9 @@ def _stub_archipelago() -> None:
     class Toggle(_Opt):
         pass
 
+    class OptionList(_Opt):
+        pass
+
     class OptionGroup:
         def __init__(self, *args, **kwargs):
             pass
@@ -82,6 +85,7 @@ def _stub_archipelago() -> None:
     options.Choice = Choice
     options.Range = Range
     options.Toggle = Toggle
+    options.OptionList = OptionList
     options.OptionGroup = OptionGroup
     options.PerGameCommonOptions = PerGameCommonOptions
     sys.modules["Options"] = options
@@ -111,11 +115,12 @@ def _import_world():
         return mod
 
     equipment = load("equipment", world_dir / "equipment.py")
+    ship_catalog = load("ship_catalog", world_dir / "ship_catalog.py")
     items = load("items", world_dir / "items.py")
     salvage_tiers = load("salvage_tiers", world_dir / "salvage_tiers.py")
     load("options", world_dir / "options.py")
     locations = load("locations", world_dir / "locations.py")
-    return equipment, items, locations, salvage_tiers
+    return equipment, items, locations, salvage_tiers, ship_catalog
 
 
 def slug(name: str) -> str:
@@ -170,6 +175,8 @@ ICON_COLORS: dict[str, tuple[int, int, int, int]] = {
     "trap": (160, 40, 40, 255),
     "setting": (80, 80, 100, 255),
     "default": (160, 160, 160, 255),
+    "part": (150, 120, 90, 255),
+    "ship_unlock": (90, 200, 230, 255),
     "chest_closed": (200, 160, 60, 255),
     "chest_open": (90, 90, 90, 255),
     "map_bg": (28, 32, 40, 255),
@@ -462,7 +469,7 @@ def emit_visibility_lua(path: Path, meta: dict[int, dict]) -> None:
 
 
 def main() -> int:
-    equipment, items, locations, salvage_tiers = _import_world()
+    equipment, items, locations, salvage_tiers, ship_catalog = _import_world()
     OUT_SCRIPTS.mkdir(parents=True, exist_ok=True)
     OUT_ITEMS.mkdir(parents=True, exist_ok=True)
     OUT_LOCS.mkdir(parents=True, exist_ok=True)
@@ -614,6 +621,23 @@ def main() -> int:
             if name not in LEGACY_NAMES:
                 main_grid_codes.append(code)
 
+    part_codes: dict[str, str] = {}
+    for part in ship_catalog.PART_TYPES:
+        code = "part_" + slug(part.name)
+        part_codes[part.key] = code
+        item_json.append({"name": part.name, "type": "toggle", "img": "images/icon_part.png", "codes": code})
+        item_mapping[part.item_id] = [[code], "toggle"]
+    item_json.append(
+        {
+            "name": "Ship Unlocks",
+            "type": "consumable",
+            "img": "images/icon_ship_unlock.png",
+            "codes": "ship_unlocks",
+            "max_quantity": ship_catalog.MAX_SHIPS + 10,
+        }
+    )
+    item_mapping[items.ALL_ITEM_NAME_TO_ID["Progressive Ship Unlock"]] = [["ship_unlocks"], "consumable"]
+
     # Unlock Mackerel starts collected in-world — still on grid
     OUT_ITEMS.joinpath("items.json").write_text(
         json.dumps(item_json, indent=2) + "\n", encoding="utf-8"
@@ -661,6 +685,13 @@ def main() -> int:
             "rows": [
                 ["setting_density", "setting_hab_shop", "setting_death_link", "setting_goal"],
             ],
+        },
+        "part_rando_parts": {
+            "type": "itemgrid",
+            "item_margin": "2,2",
+            "item_size": 24,
+            "h_alignment": "left",
+            "rows": chunk_rows(["ship_unlocks"] + list(part_codes.values()), 10),
         },
         "filler": {
             "type": "itemgrid",
@@ -745,10 +776,69 @@ def main() -> int:
             json.dumps(loc_file, indent=2) + "\n", encoding="utf-8"
         )
 
+    salvage_groups = []
+    ship_leaves = []
+    for i in range(1, ship_catalog.MAX_SHIPS + 1):
+        sections = []
+        for k in range(1, ship_catalog.MAX_MARKERS + 1):
+            sections.append(
+                {
+                    "name": f"Marker {k}",
+                    "item_count": 1,
+                    "access_rules": [f"$ship_marker|{i}|{k}"],
+                    "visibility_rules": [f"$ship_marker_visible|{i}|{k}"],
+                }
+            )
+            location_mapping[ship_catalog.marker_location_id(i, k)] = [f"@Part Rando/Ships/Ship {i}/Marker {k}"]
+        ship_leaves.append(
+            {
+                "name": f"Ship {i}",
+                "short_name": f"Ship {i}",
+                "chest_unopened_img": "images/chest_closed.png",
+                "chest_opened_img": "images/chest_open.png",
+                "visibility_rules": [f"$ship_visible|{i}"],
+                "sections": sections,
+            }
+        )
+    salvage_groups.append(("Ships", "part_rando_ships", ship_leaves))
+    first_leaves = []
+    for part in ship_catalog.PART_TYPES:
+        first_leaves.append(
+            {
+                "name": part.name,
+                "short_name": part.name[:28],
+                "chest_unopened_img": "images/chest_closed.png",
+                "chest_opened_img": "images/chest_open.png",
+                "access_rules": [f"$partsanity|{part.key}"],
+                "visibility_rules": [f"$partsanity_visible|{part.key}"],
+                "sections": [{"name": "Check", "item_count": 1}],
+            }
+        )
+        location_mapping[ship_catalog.part_location_id(part)] = [f"@Part Rando/Partsanity/{part.name}/Check"]
+    salvage_groups.append(("Partsanity", "part_rando_partsanity", first_leaves))
+
+    salvage_children = []
+    for group_name, map_id, leaves in salvage_groups:
+        rows = max(1, (len(leaves) + MAP_COLS - 1) // MAP_COLS)
+        write_png(OUT_IMAGES / "maps" / f"{map_id}.png", MAP_PAD * 2 + MAP_COLS * MAP_COL_W,
+                  MAP_PAD * 2 + rows * MAP_ROW_H + 8, ICON_COLORS["map_bg"])
+        maps.append({"name": map_id, "location_size": 16, "location_border_thickness": 1,
+                     "img": f"images/maps/{map_id}.png"})
+        region_group_maps["Part Rando"].append((group_name, map_id))
+        for n, leaf in enumerate(leaves):
+            leaf["map_locations"] = [{"map": map_id, "x": MAP_PAD + (n % MAP_COLS) * MAP_COL_W + 8,
+                                      "y": MAP_PAD + (n // MAP_COLS) * MAP_ROW_H + 8}]
+        salvage_children.append({"name": group_name, "children": leaves})
+    OUT_LOCS.joinpath("part_rando.json").write_text(
+        json.dumps([{"name": "Part Rando", "chest_unopened_img": "images/chest_closed.png",
+                     "chest_opened_img": "images/chest_open.png", "children": salvage_children}], indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     OUT_MAPS.joinpath("maps.json").write_text(json.dumps(maps, indent=2) + "\n", encoding="utf-8")
 
     # Region tabs → nested group tabs → compact multi-column maps
-    region_order = ("Hab", "Bay", "Mackerel", "Atlas", "Javelin", "Gecko", "Reactor")
+    region_order = ("Hab", "Bay", "Mackerel", "Atlas", "Javelin", "Gecko", "Reactor", "Part Rando")
     tabs = []
     for region in region_order:
         group_tabs = region_group_maps.get(region, [])
@@ -791,6 +881,12 @@ def main() -> int:
                             },
                             {
                                 "type": "group",
+                                "header": "Part Rando Parts",
+                                "dock": "top",
+                                "content": {"type": "layout", "key": "part_rando_parts"},
+                            },
+                            {
+                                "type": "group",
                                 "header": "Filler / Traps",
                                 "dock": "top",
                                 "content": {"type": "layout", "key": "filler"},
@@ -829,6 +925,13 @@ def main() -> int:
         "-- AP location_id -> { \"@path\" }",
     )
     emit_visibility_lua(OUT_SCRIPTS / "location_visibility.lua", visibility_meta)
+    (OUT_SCRIPTS / "part_codes.lua").write_text(
+        "-- Generated by tools/generate_poptracker.py — do not edit by hand.\n"
+        "-- Part Rando part type key -> item code\nPART_CODES = {\n"
+        + "".join(f'    ["{lua_escape(k)}"] = "{v}",\n' for k, v in part_codes.items())
+        + "}\n",
+        encoding="utf-8",
+    )
 
     loc_files = sorted(p.name for p in OUT_LOCS.glob("*.json"))
     (OUT_SCRIPTS / "location_files.lua").write_text(

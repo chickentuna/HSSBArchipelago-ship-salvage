@@ -1332,5 +1332,684 @@
     "type": "toggle",
     "img": "images/icon_cutter.png",
     "codes": "cutter_purchase"
+  },
+  {
+    "name": "Panel Nanocarbon",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_panel_nanocarbon"
+  },
+  {
+    "name": "Terminal Standard",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_terminal_standard"
+  },
+  {
+    "name": "Structural Beam Nanocarbon",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_structural_beam_nanocarbon"
+  },
+  {
+    "name": "Reactor Class II",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_reactor_class_ii"
+  },
+  {
+    "name": "Reactor Class I",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_reactor_class_i"
+  },
+  {
+    "name": "Fuel Tank",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_fuel_tank"
+  },
+  {
+    "name": "Panel Aluminum",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_panel_aluminum"
+  },
+  {
+    "name": "Fuel Pipe",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_fuel_pipe"
+  },
+  {
+    "name": "Airlock Console",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_airlock_console"
+  },
+  {
+    "name": "Airlock Interior",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_airlock_interior"
+  },
+  {
+    "name": "Storage Bin",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_storage_bin"
+  },
+  {
+    "name": "Nacelle",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_nacelle"
+  },
+  {
+    "name": "Console Door",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_console_door"
+  },
+  {
+    "name": "AI Node",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_ai_node"
+  },
+  {
+    "name": "Thruster Cap",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_cap"
+  },
+  {
+    "name": "Thruster Class II",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_class_ii"
+  },
+  {
+    "name": "Atmosphere Regulator",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_atmosphere_regulator"
+  },
+  {
+    "name": "Powercell",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_powercell"
+  },
+  {
+    "name": "Structural Beam Titanium",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_structural_beam_titanium"
+  },
+  {
+    "name": "Structural Beam Aluminum",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_structural_beam_aluminum"
+  },
+  {
+    "name": "Thruster Class X Fuel Injector",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_class_x_fuel_injector"
+  },
+  {
+    "name": "Thruster Class I",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_class_i"
+  },
+  {
+    "name": "Power Generator",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_power_generator"
+  },
+  {
+    "name": "Thruster Engine",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_engine"
+  },
+  {
+    "name": "Chair Wall",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_chair_wall"
+  },
+  {
+    "name": "Comm Dish",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_comm_dish"
+  },
+  {
+    "name": "Radiation Filter",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_radiation_filter"
+  },
+  {
+    "name": "Ion Ring",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_ion_ring"
+  },
+  {
+    "name": "Radiation Containment Unit",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_radiation_containment_unit"
+  },
+  {
+    "name": "Power Junction Box",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_power_junction_box"
+  },
+  {
+    "name": "Glass",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_glass"
+  },
+  {
+    "name": "Cryo Tank",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cryo_tank"
+  },
+  {
+    "name": "Crate Soft",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_crate_soft"
+  },
+  {
+    "name": "Light",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_light"
+  },
+  {
+    "name": "ECU",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_ecu"
+  },
+  {
+    "name": "Crate Shipping",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_crate_shipping"
+  },
+  {
+    "name": "Cargo Hatch",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cargo_hatch"
+  },
+  {
+    "name": "Solar Battery",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_solar_battery"
+  },
+  {
+    "name": "Fuse",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_fuse"
+  },
+  {
+    "name": "Wall Terminal",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_wall_terminal"
+  },
+  {
+    "name": "Amplifier",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_amplifier"
+  },
+  {
+    "name": "Panel Titanium",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_panel_titanium"
+  },
+  {
+    "name": "Antenna",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_antenna"
+  },
+  {
+    "name": "Thruster Nozzle",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_nozzle"
+  },
+  {
+    "name": "Electric Cable",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_electric_cable"
+  },
+  {
+    "name": "Solar Sail",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_solar_sail"
+  },
+  {
+    "name": "Terminal Nav",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_terminal_nav"
+  },
+  {
+    "name": "Double Nacelle",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_double_nacelle"
+  },
+  {
+    "name": "Hydroponics Cabinet",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_hydroponics_cabinet"
+  },
+  {
+    "name": "Antenna Long Range",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_antenna_long_range"
+  },
+  {
+    "name": "Crate Hard",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_crate_hard"
+  },
+  {
+    "name": "Power Station",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_power_station"
+  },
+  {
+    "name": "Armour Plates",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_armour_plates"
+  },
+  {
+    "name": "Air Filter",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_air_filter"
+  },
+  {
+    "name": "Pod Clamp",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_pod_clamp"
+  },
+  {
+    "name": "Structural Keel Titanium",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_structural_keel_titanium"
+  },
+  {
+    "name": "Cryo Pipe",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cryo_pipe"
+  },
+  {
+    "name": "Battery Pack",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_battery_pack"
+  },
+  {
+    "name": "Airlock Aerobridge",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_airlock_aerobridge"
+  },
+  {
+    "name": "Thermal Regulator Heat Sink",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thermal_regulator_heat_sink"
+  },
+  {
+    "name": "Hoist",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_hoist"
+  },
+  {
+    "name": "Rail Guide",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_rail_guide"
+  },
+  {
+    "name": "Tow Push Pad",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_tow_push_pad"
+  },
+  {
+    "name": "Access Panel",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_access_panel"
+  },
+  {
+    "name": "Sensors Array",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_sensors_array"
+  },
+  {
+    "name": "Utility Arm",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_utility_arm"
+  },
+  {
+    "name": "Reactor Plate Class II",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_reactor_plate_class_ii"
+  },
+  {
+    "name": "Terminal Flight",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_terminal_flight"
+  },
+  {
+    "name": "Forklift New",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_forklift_new"
+  },
+  {
+    "name": "Table",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_table"
+  },
+  {
+    "name": "Cargo Container",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cargo_container"
+  },
+  {
+    "name": "Terminal ECU",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_terminal_ecu"
+  },
+  {
+    "name": "Table Nav",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_table_nav"
+  },
+  {
+    "name": "Reactor Plate Class I",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_reactor_plate_class_i"
+  },
+  {
+    "name": "Thermal Regulator Heat Spreader",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thermal_regulator_heat_spreader"
+  },
+  {
+    "name": "Door",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_door"
+  },
+  {
+    "name": "Radiation Containment Unit Door",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_radiation_containment_unit_door"
+  },
+  {
+    "name": "Rudder",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_rudder"
+  },
+  {
+    "name": "Server",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_server"
+  },
+  {
+    "name": "Waste Disposal Unit",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_waste_disposal_unit"
+  },
+  {
+    "name": "Bed Terminal",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_bed_terminal"
+  },
+  {
+    "name": "Sign",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_sign"
+  },
+  {
+    "name": "Cockpit Storage",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cockpit_storage"
+  },
+  {
+    "name": "Rock",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_rock"
+  },
+  {
+    "name": "Bed Mattress",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_bed_mattress"
+  },
+  {
+    "name": "Bed Frame",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_bed_frame"
+  },
+  {
+    "name": "Regulator",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_regulator"
+  },
+  {
+    "name": "Sensor Tower",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_sensor_tower"
+  },
+  {
+    "name": "Storage Mount",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_storage_mount"
+  },
+  {
+    "name": "Kitchen Cabinet",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_kitchen_cabinet"
+  },
+  {
+    "name": "Nose Rail",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_nose_rail"
+  },
+  {
+    "name": "Bank Light",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_bank_light"
+  },
+  {
+    "name": "Chair Standard",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_chair_standard"
+  },
+  {
+    "name": "Antenna Base",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_antenna_base"
+  },
+  {
+    "name": "Thruster Class X Fuel Injector Cover Plate",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_thruster_class_x_fuel_injector_cover_plate"
+  },
+  {
+    "name": "Fume Chute",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_fume_chute"
+  },
+  {
+    "name": "Tow Push Pad Base Plate",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_tow_push_pad_base_plate"
+  },
+  {
+    "name": "Plug Mount",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_plug_mount"
+  },
+  {
+    "name": "Pod Clamp Fuel Clamp",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_pod_clamp_fuel_clamp"
+  },
+  {
+    "name": "Food Dispenser",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_food_dispenser"
+  },
+  {
+    "name": "Food Pack",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_food_pack"
+  },
+  {
+    "name": "Canopy",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_canopy"
+  },
+  {
+    "name": "Fabric",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_fabric"
+  },
+  {
+    "name": "Search Light",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_search_light"
+  },
+  {
+    "name": "Handle Wall Mounted",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_handle_wall_mounted"
+  },
+  {
+    "name": "Cryo Canister",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_cryo_canister"
+  },
+  {
+    "name": "Multitool",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_multitool"
+  },
+  {
+    "name": "Bottle",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_bottle"
+  },
+  {
+    "name": "Ladder",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_ladder"
+  },
+  {
+    "name": "Console Engineering",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_console_engineering"
+  },
+  {
+    "name": "Switch Flush",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_switch_flush"
+  },
+  {
+    "name": "Breaker Lights",
+    "type": "toggle",
+    "img": "images/icon_part.png",
+    "codes": "part_breaker_lights"
+  },
+  {
+    "name": "Ship Unlocks",
+    "type": "consumable",
+    "img": "images/icon_ship_unlock.png",
+    "codes": "ship_unlocks",
+    "max_quantity": 40
   }
 ]
