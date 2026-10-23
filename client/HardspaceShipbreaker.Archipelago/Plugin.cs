@@ -43,6 +43,7 @@ public class Plugin : BaseUnityPlugin
     {
         Instance = this;
         Log = Logger;
+        SaveIsolation.Apply();
 
         Server = Config.Bind("Connection", "Server", "localhost", "Last Archipelago server host (saved from connect dialog)");
         Port = Config.Bind("Connection", "Port", 38281, "Last Archipelago server port");
