@@ -70,9 +70,12 @@ internal static class PartRandoSlot
                 Parts = s["parts"]?.ToObject<Dictionary<string, float>>() ?? new Dictionary<string, float>(),
                 UnlocksNeeded = s["unlocks_needed"]?.ToObject<int>() ?? 0,
             }).ToList();
+            bool sameShips = ships.Select(x => x.Id).SequenceEqual(Ships.Select(x => x.Id));
             foreach (var ship in ships)
                 ship.CheckAt = ship.Markers.Select(m => m * (100 - SalvageMargin) / 100f).ToList();
             Ships = ships;
+            if (!sameShips)
+                SlotJobBoard.Reset();
             Active = true;
             Plugin.Log.LogInfo($"{P} Part Rando slot: {Ships.Count} ships, {PartItems.Count} part types, " +
                                $"{PartsanityLocations.Count} partsanity checks, goal {GoalPercent}% on every ship, margin {SalvageMargin}%.");
