@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import ItemClassification, Location
 
 from . import equipment
-from . import salvage_tiers
+from . import salvage_tiers, ship_catalog
 from .items import BASE_ID, HardspaceShipbreakerItem
 from .options import Goal, LocationDensity
 
@@ -54,6 +54,7 @@ LOCATION_NAME_TO_ID = {
 }
 LOCATION_NAME_TO_ID.update(equipment.equipment_location_name_to_id())
 LOCATION_NAME_TO_ID.update(salvage_tiers.salvage_tier_location_name_to_id())
+ALL_LOCATION_NAME_TO_ID = {**LOCATION_NAME_TO_ID, **ship_catalog.ship_location_name_to_id()}
 
 # Density buckets — sparse ⊂ standard; full == all LOCATION_NAME_TO_ID (== standard today).
 SPARSE_LOCATIONS = {

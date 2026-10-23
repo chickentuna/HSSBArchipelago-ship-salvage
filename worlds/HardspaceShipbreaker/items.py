@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import Item, ItemClassification
 
-from . import equipment
+from . import equipment, ship_catalog
 
 if TYPE_CHECKING:
     from .world import HardspaceShipbreakerWorld
@@ -30,6 +30,7 @@ ITEM_NAME_TO_ID = {
     "Nothing": BASE_ID + 90,
 }
 ITEM_NAME_TO_ID.update(equipment.equipment_item_name_to_id())
+ALL_ITEM_NAME_TO_ID = {**ITEM_NAME_TO_ID, **ship_catalog.part_item_name_to_id()}
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
     "Progressive Ship Unlock": ItemClassification.progression,
@@ -47,6 +48,7 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     "Nothing": ItemClassification.filler,
 }
 DEFAULT_ITEM_CLASSIFICATIONS.update(equipment.equipment_classifications())
+DEFAULT_ITEM_CLASSIFICATIONS.update({name: ItemClassification.progression for name in ship_catalog.part_item_name_to_id()})
 
 PROGRESSION_ITEM_COUNTS = {
     "Progressive Certification Rank": 4,
@@ -89,7 +91,7 @@ def create_item_with_correct_classification(
     world: HardspaceShipbreakerWorld, name: str
 ) -> HardspaceShipbreakerItem:
     classification = DEFAULT_ITEM_CLASSIFICATIONS[name]
-    return HardspaceShipbreakerItem(name, classification, ITEM_NAME_TO_ID[name], world.player)
+    return HardspaceShipbreakerItem(name, classification, ALL_ITEM_NAME_TO_ID[name], world.player)
 
 
 def create_all_items(world: HardspaceShipbreakerWorld) -> None:
