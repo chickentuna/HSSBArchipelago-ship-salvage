@@ -89,7 +89,7 @@ public class Plugin : BaseUnityPlugin
         _client = new ArchipelagoClient();
         _connectionDialog = new ConnectionDialog(this);
         Log.LogInfo(
-            $"{PLUGIN_NAME} v{PLUGIN_VERSION} loaded. F6 = progress · F7 = connect · F8 = check · F9 = goal · F10/F11 = cert debug.");
+            $"{PLUGIN_NAME} v{PLUGIN_VERSION} loaded. F5 = ship dump · F6 = progress · F7 = connect · F8 = check · F9 = goal · F10/F11 = cert debug.");
 
         try
         {
