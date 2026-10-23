@@ -9,12 +9,14 @@ Tracker:AddLocations("locations/atlas.json")
 Tracker:AddLocations("locations/javelin.json")
 Tracker:AddLocations("locations/gecko.json")
 Tracker:AddLocations("locations/reactor.json")
+Tracker:AddLocations("locations/part_rando.json")
 Tracker:AddLayouts("layouts/items.json")
 Tracker:AddLayouts("layouts/tracker.json")
 
 ScriptHost:LoadScript("scripts/generated/item_mapping.lua")
 ScriptHost:LoadScript("scripts/generated/location_mapping.lua")
 ScriptHost:LoadScript("scripts/generated/location_visibility.lua")
+ScriptHost:LoadScript("scripts/generated/part_codes.lua")
 ScriptHost:LoadScript("scripts/logic.lua")
 
 if PopVersion and PopVersion >= "0.18.0" then

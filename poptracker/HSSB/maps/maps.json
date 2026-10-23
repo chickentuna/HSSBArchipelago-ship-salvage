@@ -166,5 +166,17 @@
     "location_size": 16,
     "location_border_thickness": 1,
     "img": "images/maps/gecko_salvage_runner.png"
+  },
+  {
+    "name": "part_rando_ships",
+    "location_size": 16,
+    "location_border_thickness": 1,
+    "img": "images/maps/part_rando_ships.png"
+  },
+  {
+    "name": "part_rando_partsanity",
+    "location_size": 16,
+    "location_border_thickness": 1,
+    "img": "images/maps/part_rando_partsanity.png"
   }
 ]

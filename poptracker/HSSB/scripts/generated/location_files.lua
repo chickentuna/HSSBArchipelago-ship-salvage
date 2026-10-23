@@ -6,5 +6,6 @@ LOCATION_FILES = {
     "locations/hab.json",
     "locations/javelin.json",
     "locations/mackerel.json",
+    "locations/part_rando.json",
     "locations/reactor.json",
 }

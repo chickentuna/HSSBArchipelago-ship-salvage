@@ -29,6 +29,15 @@
             },
             {
               "type": "group",
+              "header": "Part Rando Parts",
+              "dock": "top",
+              "content": {
+                "type": "layout",
+                "key": "part_rando_parts"
+              }
+            },
+            {
+              "type": "group",
               "header": "Filler / Traps",
               "dock": "top",
               "content": {
@@ -335,6 +344,32 @@
                       "type": "map",
                       "maps": [
                         "reactor_reactor_ii"
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "title": "Part Rando",
+              "content": {
+                "type": "tabbed",
+                "tabs": [
+                  {
+                    "title": "Ships",
+                    "content": {
+                      "type": "map",
+                      "maps": [
+                        "part_rando_ships"
+                      ]
+                    }
+                  },
+                  {
+                    "title": "Partsanity",
+                    "content": {
+                      "type": "map",
+                      "maps": [
+                        "part_rando_partsanity"
                       ]
                     }
                   }
