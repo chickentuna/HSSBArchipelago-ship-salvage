@@ -54,6 +54,7 @@ internal static class ShipStripConfig
         SpeechHooks.Apply(_harmony);
         PopupHooks.Apply(_harmony);
         SlotJobBoard.Apply(_harmony);
+        SlotMarkers.Apply(_harmony);
         if (UiTrace.Value)
             ApMode.UiTrace.Enable();
     }
@@ -61,6 +62,7 @@ internal static class ShipStripConfig
     public static void Update()
     {
         ShipCatalog.Update();
+        SlotMarkers.Update();
         if (!Enabled.Value || !Input.GetKeyDown(KeyCode.F5))
             return;
         Plugin.Log.LogInfo("[HS-STRIP] F5: manual dump requested.");

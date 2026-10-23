@@ -257,6 +257,7 @@ internal static class SlotJobBoard
                 var preview = _previews.Length >= ship.Index ? _previews[ship.Index - 1] : null;
                 if (preview == null || IsInBay(ship) || !PartRandoSlot.IsUnlocked(ship)) continue;
                 var cls = FindClass(ship.ShipClass);
+                SlotMarkers.ApplyMarkers(preview);
                 _addCard.Invoke(__instance, new object[] { preview, cls, ShipCardController.ShipCardType.AvailableShip, false });
                 shown++;
             }
