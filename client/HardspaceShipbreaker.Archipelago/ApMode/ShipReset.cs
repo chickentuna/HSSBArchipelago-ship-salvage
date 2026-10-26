@@ -75,7 +75,7 @@ internal static class ShipReset
     private static bool CanReset()
     {
         var ms = ModuleService.Instance;
-        return ShipStripConfig.Enabled.Value && ApProfiles.CurrentIsAp && !_running && ms != null &&
+        return ShipStripConfig.Enabled.Value && ApProfiles.CurrentIsAp && PartRandoSlot.Active && !_running && ms != null &&
                ms.CurrentShipPreview != null && ms.CurrentShipPreview.IsManifestValid && ms.CurrentSpawnPoint != null &&
                !ms.ShipSpawningInProgress && !ms.ShipDespawningInProgress;
     }
