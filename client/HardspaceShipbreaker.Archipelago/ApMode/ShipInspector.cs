@@ -15,6 +15,7 @@ namespace HardspaceShipbreaker.Archipelago.ApMode;
 internal sealed class SalvageUnit
 {
     public Entity Entity;
+    public ulong MemberId;
     public bool IsGroup;
     public bool CountsInTotal;
     public string GameObjectName = "";
@@ -48,7 +49,7 @@ internal static class ShipInspector
         None = new[] { ComponentType.ReadOnly<PendingDestruction>() }
     };
 
-    private static bool TryGetContext(out EntityManager em, out Entity manifest, out ShipPreview preview)
+    internal static bool TryGetContext(out EntityManager em, out Entity manifest, out ShipPreview preview)
     {
         em = default;
         manifest = Entity.Null;
@@ -123,7 +124,7 @@ internal static class ShipInspector
         }
     }
 
-    private static List<SalvageUnit> Collect(EntityManager em)
+    internal static List<SalvageUnit> Collect(EntityManager em)
     {
         var creditsId = CreditsId();
         if (creditsId == AssetTypeID<CurrencyAsset>.None)
@@ -138,7 +139,7 @@ internal static class ShipInspector
             {
                 try
                 {
-                    var u = new SalvageUnit { Entity = e, IsGroup = false };
+                    var u = new SalvageUnit { Entity = e, IsGroup = false, MemberId = MemberId(em, e) };
                     u.Salvageable = em.GetComponentData<SalvageableComponent>(e);
                     if (em.HasComponent<MassComponent>(e))
                         u.Mass = em.GetComponentData<MassComponent>(e).Mass;
@@ -171,7 +172,7 @@ internal static class ShipInspector
             {
                 try
                 {
-                    var u = new SalvageUnit { Entity = e, IsGroup = true };
+                    var u = new SalvageUnit { Entity = e, IsGroup = true, MemberId = MemberId(em, e) };
                     u.Salvageable = em.GetComponentData<SalvageableComponent>(e);
                     if (em.HasComponent<MassComponent>(e))
                         u.Mass = em.GetComponentData<MassComponent>(e).Mass;
@@ -199,13 +200,16 @@ internal static class ShipInspector
         return units;
     }
 
+    internal static ulong MemberId(EntityManager em, Entity e) =>
+        em.Exists(e) && em.HasComponent<ShipMemberID>(e) ? em.GetComponentData<ShipMemberID>(e).Value.Value : 0UL;
+
     private static bool CanSeal(EntityManager em, Entity e) =>
         em.Exists(e) && em.HasComponent<StructurePartData>(e) && (bool)em.GetComponentData<StructurePartData>(e).CanSeal;
 
-    private static ShipCurrentSalvageProgress ReadProgress(EntityManager em, Entity manifest) =>
+    internal static ShipCurrentSalvageProgress ReadProgress(EntityManager em, Entity manifest) =>
         em.GetComponentData<ShipCurrentSalvageProgress>(manifest);
 
-    private static string Fmt(ShipCurrentSalvageProgress p) =>
+    internal static string Fmt(ShipCurrentSalvageProgress p) =>
         $"Total={p.TotalCreditValue:F2} Salvaged={p.CurrentSalvagedCreditValue:F2} " +
         $"Destroyed={p.CurrentDestroyedCreditValue:F2} Remaining={p.RemainingCreditValue:F2}";
 
@@ -469,6 +473,7 @@ internal static class ShipInspector
                     Plugin.Log.LogWarning($"{P} Strip of {u.Entity} failed: {ex.Message}");
                 }
             }
+            ShipReset.RecordStripped(em, preview, targets);
             var after = ReadProgress(em, manifest);
             Plugin.Log.LogInfo($"{P} Strip marked {marked} entities for destruction ({failed} failed). Immediately: {Fmt(after)}");
             if (ShipStripConfig.ShowStrippedAsDestroyed.Value && strippedValue > 0f)

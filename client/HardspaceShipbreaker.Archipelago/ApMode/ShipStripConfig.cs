@@ -55,6 +55,7 @@ internal static class ShipStripConfig
         PopupHooks.Apply(_harmony);
         SlotJobBoard.Apply(_harmony);
         SlotMarkers.Apply(_harmony);
+        ShipReset.Apply(_harmony);
         if (UiTrace.Value)
             ApMode.UiTrace.Enable();
     }

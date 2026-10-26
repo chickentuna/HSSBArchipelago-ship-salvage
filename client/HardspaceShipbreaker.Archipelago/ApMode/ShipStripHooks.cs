@@ -65,6 +65,8 @@ internal static class ShipStripHooks
             Plugin.Log.LogInfo("[HS-STRIP] TotalSalvageValueCalculationSystem.OnUpdate ran (new ship spawn).");
             if (ShipStripConfig.DumpOnSpawn.Value)
                 ShipInspector.DumpCurrentShip(manual: false);
+            if (ShipReset.TryFinish())
+                return;
             if (ApProfiles.CurrentIsAp && PartRandoSlot.Active)
                 ShipInspector.StripPartTypes(PartRandoSlot.LockedPartTypes());
             else if (ShipStripConfig.StripOnSpawn.Value)
