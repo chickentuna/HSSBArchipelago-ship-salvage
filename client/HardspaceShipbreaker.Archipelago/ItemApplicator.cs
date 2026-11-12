@@ -59,12 +59,8 @@ internal static class ItemApplicator
     private static bool _demoLicense;
     private static bool _chargedPush;
     private static bool _o2RechargeModule;
-    private static bool _launcherUnlocked;
     private static bool _pendingDemoAutoDeploy;
     private static bool _pendingDemoRental;
-    private static bool _pendingLauncherCryo;
-    private static bool _pendingLauncherExplosive;
-    private static bool _pendingLauncherMagnetic;
     private static int _certRankProgress;
     private static MethodInfo? _trySetCertification;
     private static MethodInfo? _tryIncreaseCertification;
@@ -199,12 +195,8 @@ internal static class ItemApplicator
         _demoLicense = false;
         _chargedPush = false;
         _o2RechargeModule = false;
-        _launcherUnlocked = false;
         _pendingDemoAutoDeploy = false;
         _pendingDemoRental = false;
-        _pendingLauncherCryo = false;
-        _pendingLauncherExplosive = false;
-        _pendingLauncherMagnetic = false;
         _firstEquipmentPurchaseChecked = false;
         _suppressTrainingShipUi = false;
         Plugin.Log.LogInfo("[HS-AP] Reset received-item / Hab-grant state for AP login.");
@@ -1264,41 +1256,6 @@ internal static class ItemApplicator
                 TryApplyEquipmentTier("O2 Recharge Module");
                 FlushItemsGatedBy("O2 Recharge Module");
                 break;
-            case "Unlock Launcher":
-                _launcherUnlocked = true;
-                TryApplyEquipmentTier("Unlock Launcher");
-                FlushItemsGatedBy("Unlock Launcher");
-                break;
-            case "Launcher Cryo":
-                if (!_launcherUnlocked)
-                {
-                    _pendingLauncherCryo = true;
-                    Plugin.Log.LogInfo("[HS-AP] Launcher Cryo queued until Unlock Launcher is owned.");
-                    break;
-                }
-
-                TryApplyEquipmentTier("Launcher Cryo");
-                break;
-            case "Launcher Explosive":
-                if (!_launcherUnlocked)
-                {
-                    _pendingLauncherExplosive = true;
-                    Plugin.Log.LogInfo("[HS-AP] Launcher Explosive queued until Unlock Launcher is owned.");
-                    break;
-                }
-
-                TryApplyEquipmentTier("Launcher Explosive");
-                break;
-            case "Launcher Magnetic":
-                if (!_launcherUnlocked)
-                {
-                    _pendingLauncherMagnetic = true;
-                    Plugin.Log.LogInfo("[HS-AP] Launcher Magnetic queued until Unlock Launcher is owned.");
-                    break;
-                }
-
-                TryApplyEquipmentTier("Launcher Magnetic");
-                break;
             case "Progressive Ship Unlock":
             case "Unlock Atlas":
             case "Unlock Javelin":
@@ -1430,14 +1387,6 @@ internal static class ItemApplicator
                 }
 
                 break;
-            case "Progressive Launcher Range":
-                if (!_launcherUnlocked)
-                {
-                    Plugin.Log.LogInfo("[HS-AP] Progressive Launcher Range ×1 grants Unlock Launcher.");
-                    Apply("Unlock Launcher", 0);
-                }
-
-                break;
         }
     }
 
@@ -1451,8 +1400,6 @@ internal static class ItemApplicator
                 => "Demo Charge License",
             "Progressive Charged Push Force" => "Charged Push",
             "Progressive O2 Recharge" => "O2 Recharge Module",
-            "Progressive Launcher Range" or "Launcher Cryo" or "Launcher Explosive" or "Launcher Magnetic"
-                => "Unlock Launcher",
             _ => null
         };
 
@@ -1463,7 +1410,6 @@ internal static class ItemApplicator
             "Demo Charge License" => _demoLicense,
             "Charged Push" => _chargedPush,
             "O2 Recharge Module" => _o2RechargeModule,
-            "Unlock Launcher" => _launcherUnlocked,
             _ => true
         };
 
@@ -1503,24 +1449,6 @@ internal static class ItemApplicator
             _pendingDemoRental = false;
             TryApplyEquipmentTier("Demo Charge Rental");
         }
-
-        if (license == "Unlock Launcher" && _pendingLauncherCryo)
-        {
-            _pendingLauncherCryo = false;
-            TryApplyEquipmentTier("Launcher Cryo");
-        }
-
-        if (license == "Unlock Launcher" && _pendingLauncherExplosive)
-        {
-            _pendingLauncherExplosive = false;
-            TryApplyEquipmentTier("Launcher Explosive");
-        }
-
-        if (license == "Unlock Launcher" && _pendingLauncherMagnetic)
-        {
-            _pendingLauncherMagnetic = false;
-            TryApplyEquipmentTier("Launcher Magnetic");
-        }
     }
 
     private static bool TryApplyEquipmentTier(string tierItemName)
@@ -1546,11 +1474,6 @@ internal static class ItemApplicator
             if (string.Equals(tierItemName, "Charged Push", StringComparison.Ordinal))
             {
                 _chargedPush = true;
-            }
-
-            if (string.Equals(tierItemName, "Unlock Launcher", StringComparison.Ordinal))
-            {
-                _launcherUnlocked = true;
             }
 
             TryApplyUpgradeKey($"equip:{tierItemName}", entry.AssetMatch);

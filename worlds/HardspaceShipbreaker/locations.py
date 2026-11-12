@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 # Stable IDs — never renumber existing offsets once shipped.
 # Ship progress: family (+300) / variant (+350) Salvage Tier 1–5.
-# Hab shop: +200–299, rentals/durability +320–349, extended Hab +430–448.
+# Hab shop: +200–299, rentals/durability +320–349, Demo Durability +444–448, Cutter Purchase +449.
 LOCATION_NAME_TO_ID = {
     # Hab / meta
     "Finish Basic Training": BASE_ID + 100,

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import re
-
 from BaseClasses import ItemClassification
 
 BASE_ID = 2_026_080_100
@@ -118,7 +116,6 @@ HAB_SHOP_LOCATIONS: list[tuple[str, int]] = [
     ("Hab: Thruster Durability 3", 323),
     ("Hab: Thruster Durability 4", 324),
     ("Hab: Thruster Durability 5", 325),
-    ("Hab: Cutter Rental", 326),
     ("Hab: Cutter Durability 1", 327),
     ("Hab: Cutter Durability 2", 328),
     ("Hab: Cutter Durability 3", 329),
@@ -138,25 +135,7 @@ HAB_SHOP_LOCATIONS: list[tuple[str, int]] = [
     ("Hab: Scanner Durability 5", 343),
     ("Hab: Helmet Rental", 344),
     ("Hab: Suit Rental", 345),
-    ("Hab: Suit Durability 1", 346),
-    ("Hab: Suit Durability 2", 347),
-    ("Hab: Suit Durability 3", 348),
     ("Hab: Demo Charge Rental", 349),
-    # Hab rows 430+ (salvage family 300–319, variant tiers 350–429).
-    ("Hab: Stinger Cut Grade", 430),
-    ("Hab: Unlock Launcher", 431),
-    ("Hab: Launcher Range 1", 432),
-    ("Hab: Launcher Range 2", 433),
-    ("Hab: Launcher Range 3", 434),
-    ("Hab: Launcher Range 4", 435),
-    ("Hab: Launcher Range 5", 436),
-    ("Hab: Launcher Cryo", 437),
-    ("Hab: Launcher Explosive", 438),
-    ("Hab: Launcher Magnetic", 439),
-    ("Hab: Scanner Detail Category", 440),
-    ("Hab: Scanner Detail Condition", 441),
-    ("Hab: Scanner Detail Hazards", 442),
-    ("Hab: Scanner Detail Materials", 443),
     # Was 350–354 (collided with Mackerel Light Cargo Salvage Tier 1–5).
     ("Hab: Demo Durability 1", 444),
     ("Hab: Demo Durability 2", 445),
@@ -178,7 +157,7 @@ def hab_core_shop_location_names() -> list[str]:
     """Gear unlocks / upgrades — excludes rental-fee and durability rows."""
     return [
         name for name, off in HAB_SHOP_LOCATIONS
-        if off < 320 or 430 <= off <= 443 or off == 449
+        if off < 320 or off == 449
     ]
 
 
@@ -222,10 +201,7 @@ PROGRESSIVE_EQUIPMENT: list[tuple[str, int, int, ItemClassification, str]] = [
     ("Progressive Cutter Durability", 523, 5, ItemClassification.useful, "Cutter Durability"),
     ("Progressive Grapple Durability", 525, 5, ItemClassification.useful, "Grapple Durability"),
     ("Progressive Scanner Durability", 527, 5, ItemClassification.useful, "Scanner Durability"),
-    ("Progressive Suit Durability", 530, 3, ItemClassification.useful, "Suit Durability"),
     ("Progressive Demo Durability", 532, 5, ItemClassification.useful, "Demo Durability"),
-    ("Progressive Launcher Range", 533, 5, ItemClassification.useful, "Launcher Range"),
-    ("Progressive Scanner Detail", 539, 4, ItemClassification.useful, "Scanner Detail"),
 ]
 
 # Single (non-progressive) equipment unlocks / licenses.
@@ -237,41 +213,13 @@ SINGLE_EQUIPMENT: list[tuple[str, int, ItemClassification]] = [
     ("Demo Auto-Deploy", 95, ItemClassification.useful),
     ("O2 Recharge Module", 501, ItemClassification.progression),
     ("Thruster Rental", 520, ItemClassification.useful),
-    ("Cutter Rental", 522, ItemClassification.useful),
     ("Cutter Purchase", 540, ItemClassification.useful),
     ("Grapple Rental", 524, ItemClassification.useful),
     ("Scanner Rental", 526, ItemClassification.useful),
     ("Helmet Rental", 528, ItemClassification.useful),
     ("Suit Rental", 529, ItemClassification.useful),
     ("Demo Charge Rental", 531, ItemClassification.useful),
-    ("Unlock Launcher", 534, ItemClassification.progression),
-    ("Launcher Cryo", 535, ItemClassification.useful),
-    ("Launcher Explosive", 536, ItemClassification.useful),
-    ("Launcher Magnetic", 537, ItemClassification.useful),
-    ("Stinger Cut Grade", 538, ItemClassification.useful),
 ]
-
-# Hab shop location → license/unlock item that must be owned first.
-# License shops themselves are omitted (only need equipment shop / PCR).
-HAB_LICENSE_GATES: dict[str, str] = {}
-for _loc, _ in HAB_SHOP_LOCATIONS:
-    if _loc.startswith("Hab: Tethers Amount") or _loc.startswith("Hab: Tethers Lifetime"):
-        HAB_LICENSE_GATES[_loc] = "Tether Module"
-    elif _loc.startswith("Hab: Demo Charges") or _loc.startswith("Hab: Demo Disarming") \
-            or _loc.startswith("Hab: Demo Self") or _loc == "Hab: Demo Auto-Deploy" \
-            or _loc.startswith("Hab: Demo Durability") or _loc == "Hab: Demo Charge Rental":
-        HAB_LICENSE_GATES[_loc] = "Demo Charge License"
-    elif _loc.startswith("Hab: Charged Push Force"):
-        HAB_LICENSE_GATES[_loc] = "Charged Push"
-    elif _loc.startswith("Hab: O2 Recharge ") and _loc != "Hab: O2 Recharge Module":
-        HAB_LICENSE_GATES[_loc] = "O2 Recharge Module"
-    elif _loc == "Hab: Scanner Systems":
-        # Mode unlock order: Objects before Systems (Progressive Scanner ×1).
-        HAB_LICENSE_GATES[_loc] = "Progressive Scanner"
-    elif _loc.startswith("Hab: Launcher"):
-        HAB_LICENSE_GATES[_loc] = "Unlock Launcher"
-    elif _loc.startswith("Hab: Scanner Detail"):
-        HAB_LICENSE_GATES[_loc] = "Progressive Scanner"
 
 # Progressive / single AP items that must not apply until their license is owned.
 ITEM_LICENSE_GATES: dict[str, str] = {
@@ -286,105 +234,154 @@ ITEM_LICENSE_GATES: dict[str, str] = {
     "Demo Charge Rental": "Demo Charge License",
     "Progressive Charged Push Force": "Charged Push",
     "Progressive O2 Recharge": "O2 Recharge Module",
-    "Progressive Launcher Range": "Unlock Launcher",
-    "Launcher Cryo": "Unlock Launcher",
-    "Launcher Explosive": "Unlock Launcher",
-    "Launcher Magnetic": "Unlock Launcher",
-    "Progressive Scanner Detail": "Progressive Scanner",
 }
 
-# Hab locations that ARE the license purchases (no prior license item required).
-LICENSE_HAB_LOCATIONS = {
-    "Hab: Unlock Tethers",
-    "Hab: Unlock Demo Charge",
-    "Hab: Charged Push",
-    "Hab: O2 Recharge Module",
-    "Hab: Scanner Objects",
-    "Hab: Unlock Launcher",
-}
-
-# Vanilla UpgradeAsset.RequiredTier (cert rank) per Hab shop row.
+# Vanilla Career shop (DefaultUpgradeSettingsAsset upgrade trees): location → (RequiredTier, PreviousUpgrade).
+# The Hab only sells a row once the previous row was bought there; received AP items don't count.
 # Client PCR ceilings: ×0→4, ×1→9, ×2→14, ×3→19, ×4→20.
-# Values from in-game asset dumps; unlisted shops default to rank 5 (need PCR ×1).
-def _tiers(prefix: str, ranks: list[int]) -> dict[str, int]:
-    return {f"{prefix} {i}": rank for i, rank in enumerate(ranks, start=1)}
-
-
-HAB_SHOP_REQUIRED_RANK: dict[str, int] = {
-    "Hab: Purchase First Equipment Upgrade": 1,
-    "Hab: Unlock Tethers": 4,
-    "Hab: Unlock Demo Charge": 11,
-    "Hab: Charged Push": 6,
-    "Hab: Scanner Objects": 7,
-    "Hab: Scanner Systems": 8,
-    "Hab: O2 Recharge Module": 8,
-    "Hab: Unlock Launcher": 8,
-    "Hab: Demo Auto-Deploy": 16,
-    "Hab: Cutter Heat 1": 7,
-    "Hab: Cutter Heat Capacity 2": 9,
-    "Hab: Cutter Heat Capacity 3": 11,
-    "Hab: Cutter Rental": 1,
-    "Hab: Cutter Purchase": 20,
-    "Hab: Thruster Rental": 18,
-    "Hab: Grapple Rental": 1,
-    "Hab: Scanner Rental": 20,
-    "Hab: Helmet Rental": 19,
-    "Hab: Suit Rental": 19,
-    "Hab: Demo Charge Rental": 20,
-    "Hab: Stinger Cut Grade": 8,
-    "Hab: Launcher Cryo": 12,
-    "Hab: Launcher Explosive": 12,
-    "Hab: Launcher Magnetic": 12,
-    "Hab: Scanner Detail Category": 1,
-    "Hab: Scanner Detail Condition": 1,
-    "Hab: Scanner Detail Hazards": 5,
-    "Hab: Scanner Detail Materials": 8,
-    **_tiers("Hab: Grapple Strength", [6, 8, 10, 12, 14]),
-    **_tiers("Hab: Tethers Amount", [5, 8, 11]),
-    **_tiers("Hab: Tethers Lifetime", [7, 10, 14, 17]),
-    **_tiers("Hab: Suit Integrity", [5, 9, 13, 17, 20]),
-    **_tiers("Hab: Scanner Range", [7, 9, 11, 13, 15]),
-    **_tiers("Hab: Heat Resistance", [6, 8, 10, 12, 14]),
-    **_tiers("Hab: Cryo Resistance", [11, 13, 15, 17, 19]),
-    **_tiers("Hab: Electrical Resistance", [6, 9, 12, 15, 18]),
-    **_tiers("Hab: Cutter Cooldown", [7, 10, 13]),
-    **_tiers("Hab: Stinger Range", [5, 7, 9, 11, 13]),
-    **_tiers("Hab: Splitsaw Range", [6, 9, 12, 15, 18]),
-    **_tiers("Hab: Grapple Range", [5, 7, 9, 11, 13]),
-    **_tiers("Hab: Charged Push Force", [10, 14, 18]),
-    **_tiers("Hab: Demo Charges Capacity", [12, 14, 16, 18, 20]),
-    **_tiers("Hab: Demo Disarming", [12, 14, 16]),
-    **_tiers("Hab: Demo Self Cleanup", [12, 15, 18]),
-    **_tiers("Hab: O2 Capacity", [5, 8, 11, 14, 17]),
-    **_tiers("Hab: O2 Recharge", [8, 11, 14]),
-    **_tiers("Hab: Thruster Top Speed", [5, 7, 9]),
-    **_tiers("Hab: Thruster Braking", [6, 8, 10]),
-    **_tiers("Hab: Thruster Fuel Capacity", [7, 9, 13]),
-    **_tiers("Hab: Audio Resynth", [5, 8, 11]),
-    **_tiers("Hab: Thruster Durability", [6, 9, 12, 15, 18]),
-    **_tiers("Hab: Cutter Durability", [6, 9, 12, 15, 18]),
-    **_tiers("Hab: Grapple Durability", [5, 8, 11, 14, 17]),
-    **_tiers("Hab: Scanner Durability", [8, 11, 14, 17, 20]),
-    **_tiers("Hab: Suit Durability", [1, 1, 1]),
-    **_tiers("Hab: Demo Durability", [12, 14, 16, 18, 20]),
-    **_tiers("Hab: Launcher Range", [8, 10, 12, 14, 16]),
+HAB_SHOP_VANILLA: dict[str, tuple[int, str | None]] = {
+    "Hab: Purchase First Equipment Upgrade": (1, None),
+    "Hab: Unlock Tethers": (4, None),
+    "Hab: Grapple Strength 1": (6, None),
+    "Hab: Grapple Strength 2": (8, "Hab: Grapple Strength 1"),
+    "Hab: Grapple Strength 3": (10, "Hab: Grapple Strength 2"),
+    "Hab: Grapple Strength 4": (12, "Hab: Grapple Strength 3"),
+    "Hab: Grapple Strength 5": (15, "Hab: Grapple Strength 4"),
+    "Hab: Tethers Amount 1": (5, "Hab: Unlock Tethers"),
+    "Hab: Tethers Amount 2": (8, "Hab: Tethers Amount 1"),
+    "Hab: Tethers Amount 3": (13, "Hab: Tethers Amount 2"),
+    "Hab: Tethers Lifetime 1": (7, "Hab: Unlock Tethers"),
+    "Hab: Tethers Lifetime 2": (10, "Hab: Tethers Lifetime 1"),
+    "Hab: Unlock Demo Charge": (11, None),
+    "Hab: Scanner Objects": (7, None),
+    "Hab: Scanner Systems": (5, None),
+    "Hab: Suit Integrity 1": (5, None),
+    "Hab: Suit Integrity 2": (9, "Hab: Suit Integrity 1"),
+    "Hab: Cutter Heat 1": (7, None),
+    "Hab: Demo Charges Capacity 1": (12, "Hab: Unlock Demo Charge"),
+    "Hab: Tethers Lifetime 3": (14, "Hab: Tethers Lifetime 2"),
+    "Hab: Tethers Lifetime 4": (17, "Hab: Tethers Lifetime 3"),
+    "Hab: Charged Push": (6, None),
+    "Hab: Scanner Range 1": (7, None),
+    "Hab: Scanner Range 2": (10, "Hab: Scanner Range 1"),
+    "Hab: Scanner Range 3": (13, "Hab: Scanner Range 2"),
+    "Hab: Scanner Range 4": (15, "Hab: Scanner Range 3"),
+    "Hab: Scanner Range 5": (17, "Hab: Scanner Range 4"),
+    "Hab: Suit Integrity 3": (12, "Hab: Suit Integrity 2"),
+    "Hab: Suit Integrity 4": (15, "Hab: Suit Integrity 3"),
+    "Hab: Suit Integrity 5": (18, "Hab: Suit Integrity 4"),
+    "Hab: Heat Resistance 1": (6, "Hab: Suit Integrity 1"),
+    "Hab: Heat Resistance 2": (8, "Hab: Heat Resistance 1"),
+    "Hab: Heat Resistance 3": (11, "Hab: Heat Resistance 2"),
+    "Hab: Heat Resistance 4": (14, "Hab: Heat Resistance 3"),
+    "Hab: Heat Resistance 5": (17, "Hab: Heat Resistance 4"),
+    "Hab: Cryo Resistance 1": (11, "Hab: Suit Integrity 1"),
+    "Hab: Cryo Resistance 2": (13, "Hab: Cryo Resistance 1"),
+    "Hab: Cryo Resistance 3": (15, "Hab: Cryo Resistance 2"),
+    "Hab: Cryo Resistance 4": (17, "Hab: Cryo Resistance 3"),
+    "Hab: Cryo Resistance 5": (20, "Hab: Cryo Resistance 4"),
+    "Hab: Electrical Resistance 1": (6, "Hab: Suit Integrity 1"),
+    "Hab: Electrical Resistance 2": (9, "Hab: Electrical Resistance 1"),
+    "Hab: Electrical Resistance 3": (12, "Hab: Electrical Resistance 2"),
+    "Hab: Electrical Resistance 4": (15, "Hab: Electrical Resistance 3"),
+    "Hab: Electrical Resistance 5": (18, "Hab: Electrical Resistance 4"),
+    "Hab: Cutter Heat Capacity 2": (11, "Hab: Cutter Heat 1"),
+    "Hab: Cutter Heat Capacity 3": (16, "Hab: Cutter Heat Capacity 2"),
+    "Hab: Cutter Cooldown 1": (6, None),
+    "Hab: Cutter Cooldown 2": (9, "Hab: Cutter Cooldown 1"),
+    "Hab: Cutter Cooldown 3": (14, "Hab: Cutter Cooldown 2"),
+    "Hab: Stinger Range 1": (5, None),
+    "Hab: Stinger Range 2": (7, "Hab: Stinger Range 1"),
+    "Hab: Stinger Range 3": (10, "Hab: Stinger Range 2"),
+    "Hab: Stinger Range 4": (13, "Hab: Stinger Range 3"),
+    "Hab: Stinger Range 5": (16, "Hab: Stinger Range 4"),
+    "Hab: Splitsaw Range 1": (6, None),
+    "Hab: Splitsaw Range 2": (9, "Hab: Splitsaw Range 1"),
+    "Hab: Splitsaw Range 3": (13, "Hab: Splitsaw Range 2"),
+    "Hab: Splitsaw Range 4": (16, "Hab: Splitsaw Range 3"),
+    "Hab: Splitsaw Range 5": (19, "Hab: Splitsaw Range 4"),
+    "Hab: Grapple Range 1": (5, None),
+    "Hab: Grapple Range 2": (6, "Hab: Grapple Range 1"),
+    "Hab: Grapple Range 3": (8, "Hab: Grapple Range 2"),
+    "Hab: Grapple Range 4": (11, "Hab: Grapple Range 3"),
+    "Hab: Grapple Range 5": (14, "Hab: Grapple Range 4"),
+    "Hab: Charged Push Force 1": (10, "Hab: Charged Push"),
+    "Hab: Charged Push Force 2": (14, "Hab: Charged Push Force 1"),
+    "Hab: Charged Push Force 3": (16, "Hab: Charged Push Force 2"),
+    "Hab: Demo Charges Capacity 2": (14, "Hab: Demo Charges Capacity 1"),
+    "Hab: Demo Charges Capacity 3": (16, "Hab: Demo Charges Capacity 2"),
+    "Hab: Demo Charges Capacity 4": (18, "Hab: Demo Charges Capacity 3"),
+    "Hab: Demo Charges Capacity 5": (20, "Hab: Demo Charges Capacity 4"),
+    "Hab: Demo Disarming 1": (12, "Hab: Unlock Demo Charge"),
+    "Hab: Demo Disarming 2": (14, "Hab: Demo Disarming 1"),
+    "Hab: Demo Disarming 3": (17, "Hab: Demo Disarming 2"),
+    "Hab: Demo Self Cleanup 1": (12, "Hab: Unlock Demo Charge"),
+    "Hab: Demo Self Cleanup 2": (15, "Hab: Demo Self Cleanup 1"),
+    "Hab: Demo Self Cleanup 3": (19, "Hab: Demo Self Cleanup 2"),
+    "Hab: Demo Auto-Deploy": (16, "Hab: Unlock Demo Charge"),
+    "Hab: O2 Capacity 1": (5, None),
+    "Hab: O2 Capacity 2": (8, "Hab: O2 Capacity 1"),
+    "Hab: O2 Capacity 3": (10, "Hab: O2 Capacity 2"),
+    "Hab: O2 Capacity 4": (13, "Hab: O2 Capacity 3"),
+    "Hab: O2 Capacity 5": (16, "Hab: O2 Capacity 4"),
+    "Hab: O2 Recharge Module": (7, None),
+    "Hab: O2 Recharge 1": (9, "Hab: O2 Recharge Module"),
+    "Hab: O2 Recharge 2": (11, "Hab: O2 Recharge 1"),
+    "Hab: O2 Recharge 3": (13, "Hab: O2 Recharge 2"),
+    "Hab: Thruster Top Speed 1": (5, None),
+    "Hab: Thruster Top Speed 2": (7, "Hab: Thruster Top Speed 1"),
+    "Hab: Thruster Top Speed 3": (10, "Hab: Thruster Top Speed 2"),
+    "Hab: Thruster Braking 1": (6, "Hab: Thruster Top Speed 1"),
+    "Hab: Thruster Braking 2": (8, "Hab: Thruster Braking 1"),
+    "Hab: Thruster Braking 3": (10, "Hab: Thruster Braking 2"),
+    "Hab: Thruster Fuel Capacity 1": (7, None),
+    "Hab: Thruster Fuel Capacity 2": (9, "Hab: Thruster Fuel Capacity 1"),
+    "Hab: Thruster Fuel Capacity 3": (13, "Hab: Thruster Fuel Capacity 2"),
+    "Hab: Audio Resynth 1": (5, None),
+    "Hab: Audio Resynth 2": (7, "Hab: Audio Resynth 1"),
+    "Hab: Audio Resynth 3": (9, "Hab: Audio Resynth 2"),
+    "Hab: Thruster Rental": (18, None),
+    "Hab: Thruster Durability 1": (6, None),
+    "Hab: Thruster Durability 2": (9, "Hab: Thruster Durability 1"),
+    "Hab: Thruster Durability 3": (12, "Hab: Thruster Durability 2"),
+    "Hab: Thruster Durability 4": (15, "Hab: Thruster Durability 3"),
+    "Hab: Thruster Durability 5": (18, "Hab: Thruster Durability 4"),
+    "Hab: Cutter Durability 1": (6, None),
+    "Hab: Cutter Durability 2": (9, "Hab: Cutter Durability 1"),
+    "Hab: Cutter Durability 3": (12, "Hab: Cutter Durability 2"),
+    "Hab: Cutter Durability 4": (15, "Hab: Cutter Durability 3"),
+    "Hab: Cutter Durability 5": (18, "Hab: Cutter Durability 4"),
+    "Hab: Grapple Rental": (18, None),
+    "Hab: Grapple Durability 1": (5, None),
+    "Hab: Grapple Durability 2": (8, "Hab: Grapple Durability 1"),
+    "Hab: Grapple Durability 3": (11, "Hab: Grapple Durability 2"),
+    "Hab: Grapple Durability 4": (14, "Hab: Grapple Durability 3"),
+    "Hab: Grapple Durability 5": (17, "Hab: Grapple Durability 4"),
+    "Hab: Scanner Rental": (20, None),
+    "Hab: Scanner Durability 1": (8, None),
+    "Hab: Scanner Durability 2": (11, "Hab: Scanner Durability 1"),
+    "Hab: Scanner Durability 3": (13, "Hab: Scanner Durability 2"),
+    "Hab: Scanner Durability 4": (16, "Hab: Scanner Durability 3"),
+    "Hab: Scanner Durability 5": (19, "Hab: Scanner Durability 4"),
+    "Hab: Helmet Rental": (19, None),
+    "Hab: Suit Rental": (19, None),
+    "Hab: Demo Charge Rental": (20, "Hab: Unlock Demo Charge"),
+    "Hab: Demo Durability 1": (12, "Hab: Unlock Demo Charge"),
+    "Hab: Demo Durability 2": (14, "Hab: Demo Durability 1"),
+    "Hab: Demo Durability 3": (16, "Hab: Demo Durability 2"),
+    "Hab: Demo Durability 4": (18, "Hab: Demo Durability 3"),
+    "Hab: Demo Durability 5": (20, "Hab: Demo Durability 4"),
+    "Hab: Cutter Purchase": (19, None),
 }
-
-# Shop-tree previous row (vanilla PreviousUpgrade). Cutter Heat names are inconsistent.
-_HAB_SHOP_PREVIOUS_SPECIAL: dict[str, str] = {
-    "Hab: Cutter Heat Capacity 2": "Hab: Cutter Heat 1",
-    "Hab: Cutter Heat Capacity 3": "Hab: Cutter Heat Capacity 2",
-    "Hab: Scanner Systems": "Hab: Scanner Objects",
-    "Hab: Scanner Detail Condition": "Hab: Scanner Detail Category",
-    "Hab: Scanner Detail Hazards": "Hab: Scanner Detail Condition",
-    "Hab: Scanner Detail Materials": "Hab: Scanner Detail Hazards",
-}
-
-_TRAILING_SHOP_TIER = re.compile(r"^(.*) (\d+)$")
 
 
 def hab_shop_required_rank(name: str) -> int:
-    return HAB_SHOP_REQUIRED_RANK.get(name, 5)
+    """Highest RequiredTier along the row's purchase chain."""
+    rank = 0
+    while name:
+        row_rank, name = HAB_SHOP_VANILLA[name]
+        rank = max(rank, row_rank)
+    return rank
 
 
 def pcr_copies_for_cert_rank(rank: int) -> int:
@@ -398,18 +395,6 @@ def pcr_copies_for_cert_rank(rank: int) -> int:
         return 3
     return 4
 
-
-def hab_shop_previous_location(name: str) -> str | None:
-    special = _HAB_SHOP_PREVIOUS_SPECIAL.get(name)
-    if special:
-        return special
-    match = _TRAILING_SHOP_TIER.match(name)
-    if not match:
-        return None
-    tier = int(match.group(2))
-    if tier <= 1:
-        return None
-    return f"{match.group(1)} {tier - 1}"
 
 # Legacy alias kept in ID map for old seeds (not placed in new pools).
 LEGACY_PROGRESSIVE_ALIASES = {

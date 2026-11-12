@@ -62,30 +62,6 @@ def _has_demo(state, player: int) -> bool:
     return state.has("Demo Charge License", player) or state.has("Progressive Demo Charges", player)
 
 
-def _has_charged_push(state, player: int) -> bool:
-    return state.has("Charged Push", player) or state.has("Progressive Charged Push Force", player)
-
-
-def _has_launcher(state, player: int) -> bool:
-    return state.has("Unlock Launcher", player) or state.has("Progressive Launcher Range", player)
-
-
-def _has_license_item(state, player: int, lic: str | None) -> bool:
-    if lic is None:
-        return True
-    if lic == "Progressive Scanner":
-        return state.has("Progressive Scanner", player)
-    if lic == "Tether Module":
-        return _has_tether(state, player)
-    if lic == "Demo Charge License":
-        return _has_demo(state, player)
-    if lic == "Charged Push":
-        return _has_charged_push(state, player)
-    if lic == "Unlock Launcher":
-        return _has_launcher(state, player)
-    return state.has(lic, player)
-
-
 def set_all_rules(world: HardspaceShipbreakerWorld) -> None:
     player = world.player
 
@@ -150,26 +126,9 @@ def set_all_rules(world: HardspaceShipbreakerWorld) -> None:
     )
 
     for shop in equipment.all_hab_equipment_location_names():
-        license_item = equipment.HAB_LICENSE_GATES.get(shop)
         pcr_needed = equipment.pcr_copies_for_cert_rank(equipment.hab_shop_required_rank(shop))
-        previous = equipment.hab_shop_previous_location(shop)
-
-        def _shop_rule(
-            state,
-            p=player,
-            lic=license_item,
-            pcr=pcr_needed,
-            prev=previous,
-        ):
-            if not _has_license_item(state, p, lic):
-                return False
-            if pcr and not state.has("Progressive Certification Rank", p, pcr):
-                return False
-            if prev and _has_loc(world, prev) and not state.can_reach(prev, "Location", p):
-                return False
-            return True
-
-        _set(world, shop, _shop_rule)
+        if pcr_needed:
+            _set(world, shop, lambda state, n=pcr_needed: state.has("Progressive Certification Rank", player, n))
 
     # Per-ship salvage tiers: need family unlock (Mackerel always via start item / PCR).
     from . import salvage_tiers as st

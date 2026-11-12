@@ -1014,12 +1014,6 @@
     ]
   },
   {
-    "name": "Cutter Rental",
-    "type": "toggle",
-    "img": "images/icon_cutter.png",
-    "codes": "cutter_rental"
-  },
-  {
     "name": "Progressive Cutter Durability",
     "type": "progressive",
     "allow_disabled": true,
@@ -1158,32 +1152,6 @@
     "codes": "suit_rental"
   },
   {
-    "name": "Progressive Suit Durability",
-    "type": "progressive",
-    "allow_disabled": true,
-    "loop": false,
-    "stages": [
-      {
-        "img": "images/icon_suit.png",
-        "codes": "progressive_suit_durability,progressive_suit_durability:1",
-        "inherit_codes": true,
-        "name": "Progressive Suit Durability \u00d71"
-      },
-      {
-        "img": "images/icon_suit.png",
-        "codes": "progressive_suit_durability:2",
-        "inherit_codes": true,
-        "name": "Progressive Suit Durability \u00d72"
-      },
-      {
-        "img": "images/icon_suit.png",
-        "codes": "progressive_suit_durability:3",
-        "inherit_codes": true,
-        "name": "Progressive Suit Durability \u00d73"
-      }
-    ]
-  },
-  {
     "name": "Demo Charge Rental",
     "type": "toggle",
     "img": "images/icon_demo.png",
@@ -1224,106 +1192,6 @@
         "codes": "progressive_demo_durability:5",
         "inherit_codes": true,
         "name": "Progressive Demo Durability \u00d75"
-      }
-    ]
-  },
-  {
-    "name": "Progressive Launcher Range",
-    "type": "progressive",
-    "allow_disabled": true,
-    "loop": false,
-    "stages": [
-      {
-        "img": "images/icon_launcher.png",
-        "codes": "progressive_launcher_range,progressive_launcher_range:1",
-        "inherit_codes": true,
-        "name": "Progressive Launcher Range \u00d71"
-      },
-      {
-        "img": "images/icon_launcher.png",
-        "codes": "progressive_launcher_range:2",
-        "inherit_codes": true,
-        "name": "Progressive Launcher Range \u00d72"
-      },
-      {
-        "img": "images/icon_launcher.png",
-        "codes": "progressive_launcher_range:3",
-        "inherit_codes": true,
-        "name": "Progressive Launcher Range \u00d73"
-      },
-      {
-        "img": "images/icon_launcher.png",
-        "codes": "progressive_launcher_range:4",
-        "inherit_codes": true,
-        "name": "Progressive Launcher Range \u00d74"
-      },
-      {
-        "img": "images/icon_launcher.png",
-        "codes": "progressive_launcher_range:5",
-        "inherit_codes": true,
-        "name": "Progressive Launcher Range \u00d75"
-      }
-    ]
-  },
-  {
-    "name": "Unlock Launcher",
-    "type": "toggle",
-    "img": "images/icon_launcher.png",
-    "codes": "unlock_launcher"
-  },
-  {
-    "name": "Launcher Cryo",
-    "type": "toggle",
-    "img": "images/icon_suit.png",
-    "codes": "launcher_cryo"
-  },
-  {
-    "name": "Launcher Explosive",
-    "type": "toggle",
-    "img": "images/icon_launcher.png",
-    "codes": "launcher_explosive"
-  },
-  {
-    "name": "Launcher Magnetic",
-    "type": "toggle",
-    "img": "images/icon_launcher.png",
-    "codes": "launcher_magnetic"
-  },
-  {
-    "name": "Stinger Cut Grade",
-    "type": "toggle",
-    "img": "images/icon_cutter.png",
-    "codes": "stinger_cut_grade"
-  },
-  {
-    "name": "Progressive Scanner Detail",
-    "type": "progressive",
-    "allow_disabled": true,
-    "loop": false,
-    "stages": [
-      {
-        "img": "images/icon_scanner.png",
-        "codes": "progressive_scanner_detail,progressive_scanner_detail:1",
-        "inherit_codes": true,
-        "name": "Progressive Scanner Detail \u00d71"
-      },
-      {
-        "img": "images/icon_scanner.png",
-        "codes": "progressive_scanner_detail:2",
-        "inherit_codes": true,
-        "name": "Progressive Scanner Detail \u00d72"
-      },
-      {
-        "img": "images/icon_scanner.png",
-        "codes": "progressive_scanner_detail:3",
-        "inherit_codes": true,
-        "name": "Progressive Scanner Detail \u00d73"
-      },
-      {
-        "img": "images/icon_scanner.png",
-        "codes": "progressive_scanner_detail:4",
-        "inherit_codes": true,
-        "name": "Progressive Scanner Detail \u00d74"
       }
     ]
   },

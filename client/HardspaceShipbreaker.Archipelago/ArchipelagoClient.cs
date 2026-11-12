@@ -81,7 +81,6 @@ public sealed class ArchipelagoClient
         ("Hab: Cryo Resistance 1", BaseId + 235),
         ("Hab: Electrical Resistance 1", BaseId + 240),
         ("Hab: Audio Resynth 1", BaseId + 297),
-        ("Hab: Suit Durability 1", BaseId + 346),
     };
 
     private ArchipelagoSession? _session;

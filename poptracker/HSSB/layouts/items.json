@@ -14,65 +14,54 @@
         "o2_recharge_module"
       ],
       [
-        "unlock_launcher",
         "progressive_grapple_strength",
         "progressive_tether_amount",
         "progressive_scanner",
         "progressive_suit_integrity",
-        "progressive_demo_charges"
+        "progressive_demo_charges",
+        "progressive_tether_lifetime"
       ],
       [
-        "progressive_tether_lifetime",
         "progressive_scanner_range",
         "progressive_heat_resistance",
         "progressive_cryo_resistance",
         "progressive_electrical_resistance",
-        "progressive_cutter_heat"
+        "progressive_cutter_heat",
+        "progressive_cutter_cooldown"
       ],
       [
-        "progressive_cutter_cooldown",
         "progressive_stinger_range",
         "progressive_splitsaw_range",
         "progressive_grapple_range",
         "progressive_charged_push_force",
-        "progressive_demo_disarming"
+        "progressive_demo_disarming",
+        "progressive_demo_self_cleanup"
       ],
       [
-        "progressive_demo_self_cleanup",
         "demo_auto_deploy",
         "progressive_o2_capacity",
         "progressive_o2_recharge",
         "progressive_thruster_top_speed",
-        "progressive_thruster_braking"
+        "progressive_thruster_braking",
+        "progressive_thruster_fuel"
       ],
       [
-        "progressive_thruster_fuel",
         "progressive_audio_resynth",
         "thruster_rental",
         "progressive_thruster_durability",
-        "cutter_rental",
-        "progressive_cutter_durability"
+        "progressive_cutter_durability",
+        "grapple_rental",
+        "progressive_grapple_durability"
       ],
       [
-        "grapple_rental",
-        "progressive_grapple_durability",
         "scanner_rental",
         "progressive_scanner_durability",
         "helmet_rental",
-        "suit_rental"
-      ],
-      [
-        "progressive_suit_durability",
+        "suit_rental",
         "demo_charge_rental",
-        "progressive_demo_durability",
-        "progressive_launcher_range",
-        "launcher_cryo",
-        "launcher_explosive"
+        "progressive_demo_durability"
       ],
       [
-        "launcher_magnetic",
-        "stinger_cut_grade",
-        "progressive_scanner_detail",
         "cutter_purchase"
       ]
     ]

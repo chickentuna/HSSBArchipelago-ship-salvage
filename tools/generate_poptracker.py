@@ -167,7 +167,6 @@ ICON_COLORS: dict[str, tuple[int, int, int, int]] = {
     "scanner": (100, 180, 255, 255),
     "suit": (140, 140, 160, 255),
     "cutter": (255, 140, 40, 255),
-    "launcher": (180, 80, 200, 255),
     "o2": (80, 200, 120, 255),
     "thruster": (100, 140, 220, 255),
     "charged_push": (255, 220, 80, 255),
@@ -201,8 +200,6 @@ def icon_family(code: str) -> str:
         return "suit"
     if "cutter" in c or "stinger" in c or "splitsaw" in c:
         return "cutter"
-    if "launcher" in c:
-        return "launcher"
     if "o2" in c:
         return "o2"
     if "thruster" in c:
@@ -291,30 +288,10 @@ def access_rule_for(
 
     shop_names = set(equipment.all_hab_equipment_location_names())
     if name in shop_names:
-        rules: list[str] = []
-        if name in equipment.HAB_LICENSE_GATES:
-            lic = equipment.HAB_LICENSE_GATES[name]
-            if lic == "Tether Module":
-                rules = tether_rules
-            elif lic == "Demo Charge License":
-                rules = demo_rules
-            elif lic == "Charged Push":
-                rules = [slug("Charged Push"), slug("Progressive Charged Push Force")]
-            elif lic == "Unlock Launcher":
-                rules = [slug("Unlock Launcher"), slug("Progressive Launcher Range")]
-            elif lic == "O2 Recharge Module":
-                rules = [slug("O2 Recharge Module")]
-            elif lic == "Progressive Scanner":
-                rules = [slug("Progressive Scanner")]
-            else:
-                rules = [slug(lic)]
         pcr_n = equipment.pcr_copies_for_cert_rank(equipment.hab_shop_required_rank(name))
         if pcr_n <= 0:
-            return rules
-        pcr_code = pcr if pcr_n == 1 else f"{pcr}:{pcr_n}"
-        if not rules:
-            return [pcr_code]
-        return [f"{rule},{pcr_code}" for rule in rules]
+            return []
+        return [pcr if pcr_n == 1 else f"{pcr}:{pcr_n}"]
 
     # Region / salvage family gates
     if region == "Mackerel" or name.startswith("Mackerel "):
@@ -653,7 +630,6 @@ def main() -> int:
         "demo_charge_license",
         "charged_push",
         "o2_recharge_module",
-        "unlock_launcher",
         "progressive_grapple_strength",
         "progressive_tether_amount",
         "progressive_scanner",
